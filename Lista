@@ -6,7 +6,7 @@ package practica.pkg1.punteros;
 
 /**
  *
- * @author LUIS
+ * @author Hitlar
  */
 public class Lista <E>{
     private Nodo primero;
