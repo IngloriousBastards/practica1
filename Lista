@@ -6,13 +6,13 @@ package practica.pkg1.punteros;
 
 /**
  *
- * @author Hitlar
+ * @author LUIS
  */
 public class Lista <E>{
     private Nodo primero;
     
-    public Lista (Nodo p){
-        this.primero = p;
+    public Lista (){
+        this.primero = null;
     }
 
     public Nodo getPrimero() {
@@ -21,28 +21,6 @@ public class Lista <E>{
 
     public void setPrimero(Nodo primero) {
         this.primero = primero;
-    }
-    
-    public int size(){
-        int i = 0;
-        Nodo node = this.getPrimero();
-        while (node != null){
-            node = node.getReferencia();
-            i++;
-        }
-        return i;
-    }
-    
-    public Nodo getAnterior(Nodo e){
-        Nodo node = this.getPrimero();
-        if (node == e){
-            return null;
-        } else {
-            while (node.getReferencia() != e){
-              node = node.getReferencia();
-            }
-        }
-        return node;
     }
     
     public void eliminar(Comparable <E> e){
@@ -71,11 +49,14 @@ public class Lista <E>{
         node.setReferencia(aux);
     }
     
-    public Nodo buscar(Comparable <E> e){
+    public Comparable <E> buscar(Comparable <E> e){
         Nodo node = getPrimero();
         while(node != null && !node.getDatos().equals(e)){
             node = node.getReferencia();
         }
-        return node;
+        if(node == null){
+            return null;
+        }
+        return node.getDatos();
     }
 }
