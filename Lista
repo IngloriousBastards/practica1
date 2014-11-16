@@ -1,0 +1,81 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package practica.pkg1.punteros;
+
+/**
+ *
+ * @author LUIS
+ */
+public class Lista <E>{
+    private Nodo primero;
+    
+    public Lista (Nodo p){
+        this.primero = p;
+    }
+
+    public Nodo getPrimero() {
+        return primero;
+    }
+
+    public void setPrimero(Nodo primero) {
+        this.primero = primero;
+    }
+    
+    public int size(){
+        int i = 0;
+        Nodo node = this.getPrimero();
+        while (node != null){
+            node = node.getReferencia();
+            i++;
+        }
+        return i;
+    }
+    
+    public Nodo getAnterior(Nodo e){
+        Nodo node = this.getPrimero();
+        if (node == e){
+            return null;
+        } else {
+            while (node.getReferencia() != e){
+              node = node.getReferencia();
+            }
+        }
+        return node;
+    }
+    
+    public void eliminar(Comparable <E> e){
+        Nodo node = this.getPrimero();
+        if (node.getDatos() == e) {
+            this.setPrimero(this.getPrimero().getReferencia());
+        } else {
+            while (node.getReferencia().getDatos() != e) {
+                node = node.getReferencia();
+            }
+            node.setReferencia(node.getReferencia().getReferencia());
+        }
+    }
+    
+    public void insertar(Comparable <E> e){
+        Nodo node = getPrimero();
+        Nodo aux = new Nodo(e,null);
+        if(node.getDatos().compareTo(aux) < 0){
+            aux.setReferencia(getPrimero());
+            setPrimero(aux);
+        }
+        while (node != null && node.getReferencia().getDatos().compareTo(e) < 0){
+            node = node.getReferencia();
+        }
+        aux.setReferencia(node.getReferencia());
+        node.setReferencia(aux);
+    }
+    
+    public Nodo buscar(Comparable <E> e){
+        Nodo node = getPrimero();
+        while(node != null && !node.getDatos().equals(e)){
+            node = node.getReferencia();
+        }
+        return node;
+    }
+}
