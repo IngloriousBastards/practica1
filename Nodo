@@ -1,0 +1,36 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package practica.pkg1.punteros;
+
+/**
+ *
+ * @author LUIS
+ */
+public class Nodo <E> {
+    private Comparable <E> datos;
+    private Nodo referencia;
+
+    public Nodo(Comparable <E> dat, Nodo ref){
+        this.datos = dat;
+        this.referencia = ref;
+    }
+    
+    public Comparable <E> getDatos() {
+        return datos;
+    }
+
+    public void setDatos(Comparable <E> datos) {
+        this.datos = datos;
+    }
+
+    public Nodo getReferencia() {
+        return referencia;
+    }
+
+    public void setReferencia(Nodo referencia) {
+        this.referencia = referencia;
+    }
+    
+}
