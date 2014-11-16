@@ -1,0 +1,233 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package practica.pkg1.punteros;
+
+import java.util.ArrayList;
+
+/**
+ *
+ * @author LUIS
+ */
+public class Colegio {
+    private Lista cursos;
+    private Lista alumnos;
+    
+    // altaCurso crea un Curso con el nombre del parametro y lo anade a cursos
+    public void altaCurso(String nombre) throws CursoExistente{
+        Nodo c = buscar;
+        if (c != null){
+            throw new CursoExistente();
+        }
+        else {
+            c = new Curso(nombre);
+            cursos.insertar(c);
+        }
+    }
+    
+    // bajaCurso da de baja las asignaturas que pertenecen al curso que se indica
+    // por parametro, y luego elimina el curso
+    public void bajaCurso(String nombre) throws CursoInexistente, AsignaturaInexistente {
+        Curso c = buscarCurso(nombre);
+        if (c == null) {
+            throw new CursoInexistente();
+        } else {
+            if (c.getAsignaturas() != null) {
+                for (int i = 0; i < c.getAsignaturas().size(); i++) {
+                    bajaAsignatura(c.getAsignaturas().get(i).getNombre());
+                }
+            }
+            cursos.eliminar(c);
+        }
+    }
+    
+    // altaAsignatura da de alta una asignatura con el nombre especificado en el 
+    // curso especificado
+    public void altaAsignatura(String nomAsignatura, String nomCurso) throws CursoInexistente, AsignaturaExistente{
+        Asignatura as = buscarAsignatura(nomAsignatura);
+        Curso c = buscarCurso(nomCurso);
+        if (as != null){
+            throw new AsignaturaExistente();
+        }
+        if (c == null) {
+            throw new CursoInexistente();
+        }
+        as = new Asignatura(nomAsignatura, c);
+        c.getAsignaturas().insertar(as);
+    }
+
+    // bajaAsignatura da de baja la asignatura y elimina las referencias de los 
+    // alumnos a la misma
+    public void bajaAsignatura(String nombre) throws AsignaturaInexistente {
+        Asignatura as = buscarAsignatura(nombre);
+        if (as == null) {
+            throw new AsignaturaInexistente();
+        } else {
+            darDeBajaAsignatura(as);
+        }
+    }
+    
+    public void darDeBajaAsignatura(Asignatura as){
+        // eliminamos las referencias a la asignatura
+        Lista l = as.getAlumnos();
+        Nodo n = l.getPrimero();
+        while (n != null){
+            
+        }
+        as.getCurso().getAsignaturas().remove(as);
+    }
+    
+    // altaAlumno da de alta un alumno con los datos especificados por parámetro
+    // y lo anade a alumnos
+    public void altaAlumno(String dni, String nombre) throws AlumnoExistente{
+        Alumno a = buscarAlumno(nombre);
+        if (a != null){
+            throw new AlumnoExistente();
+        }
+        else {
+            a = new Alumno(dni, nombre);
+        }
+        alumnos.insertar(a);
+    }
+    
+    // matricularAlumno incluye al alumno especificado en la asignatura que se 
+    // pasa por parametro, y se anade la referencia a esa asignatura a la lista
+    // de referencias de asignaturas del alumno
+    public void matricularAlumno(String nomAlumno, String nomAsignatura) throws AlumnoInexistente, AsignaturaInexistente{
+        Alumno a = buscarAlumno(nomAlumno);
+        Asignatura as = buscarAsignatura(nomAsignatura);
+        if (a == null){
+            throw new AlumnoInexistente();
+        }
+        if (as == null) {
+            throw new AsignaturaInexistente();
+        }
+        a.getAsignaturas().insertar(as);
+        as.getAlumnos().insertar(a);
+    }
+    
+    // Devuelve la informacion del curso especificado (asignaturas + estudiantes)
+    public String infoCurso(String nombre) throws CursoInexistente{
+        String info;
+        Curso c = buscarCurso(nombre);
+        Asignatura a;
+        if (c == null){
+            throw new CursoInexistente();
+        }
+        else {
+            info = "\n\t\t Asignaturas:";
+            Nodo node = c.getAsignaturas().getPrimero();
+        for (int i = 0; i < c.getAsignaturas().size(); i++) {
+            // a es la variable auxiliar que representa la asignatura actual
+            
+            a = c.getAsignaturas().get(i);
+            info += "\n\r\t " + a.getNombre() + ": ";
+            for (int j = 0; j < a.getAlumnos().size(); j++){
+                info += "\n\r " + a.getAlumnos().get(j).getNombre();
+            }
+        }
+        return info;
+        }
+        
+    }
+    
+    // Devuelve la informacion de la asignatura especificada
+    // (curso + estudiantes)
+    public String infoAsignatura(String nombre) throws AsignaturaInexistente{
+        String info;
+        Asignatura as = buscarAsignatura(nombre);
+        if (as == null){
+            throw new AsignaturaInexistente();
+        }
+        else {
+        info = "\n\t Curso: " + as.getCurso();
+        info += "\n\t Estudiantes: ";
+        // Iteramos concatenando los nombres de los alumnos
+        for (int i = 0; i < as.getAlumnos().size(); i++){
+            info += as.getAlumnos().get(i).getNombre();
+        }
+        return info; 
+        }
+    }
+    
+    // Devuelve la informacion del alumno especificado
+    // (asignaturas + cursos a los que pertenecen)
+    public String infoAlumno(String nombre) throws AlumnoInexistente{
+        String info;
+        Alumno a = buscarAlumno(nombre);
+        if (a == null){
+            throw new AlumnoInexistente();
+        }
+        else {
+            info = "\n\r\t Asignaturas :";
+            for (int i = 0; i < a.getAsignaturas().size(); i++){
+                info += a.getAsignaturas().get(i).getNombre() +
+                        " que pertenece al curso : " + a.getAsignaturas().get(i).getCurso();
+            }
+        }
+        return info;
+    }
+    
+    //buscarAlumno
+    public Alumno buscarAlumno(String nomAlumno){
+        Alumno a = null;
+        Nodo aux = new Nodo(a,null);
+        Nodo node = alumnos.getPrimero();
+        while(node != null && !node.equals(aux)){
+            node = node.getReferencia();
+        }
+        if (node != null){
+            a = (Alumno) node.getDatos();
+        }
+        return a;
+    }
+    
+    public Curso buscarCurso(String nomCurso){
+        Curso c = null;
+        for (int i = 0; c != null && i < cursos.size(); i++){
+            if (cursos.get(i).getNombre().equals(nomCurso)){
+                c = cursos.get(i);
+            }
+        }
+        return c;
+    }
+    
+    public Asignatura buscarAsignatura(String nomAsignatura) {
+        Asignatura as = null;
+        for (int i = 0; i < cursos.size(); i++) {
+            ArrayList <Asignatura> asignaturas = cursos.get(i).getAsignaturas();
+            for (int j = 0; as == null && j < asignaturas.size(); j++) {
+                if (asignaturas.get(j).getNombre().equals(nomAsignatura)) {
+                    as = asignaturas.get(j);
+                }
+            }
+        }
+        return as;
+    }
+    
+    // Estas son las clases de excepciones que nuestro programa maneja.
+    private static class AlumnoInexistente extends Exception {
+        
+    }
+    
+    private static class AlumnoExistente extends Exception {
+        
+    }
+    
+    private static class AsignaturaInexistente extends Exception {
+        
+    }
+    
+    private static class AsignaturaExistente extends Exception {
+        
+    }
+    
+    private static class CursoInexistente extends Exception {
+        
+    }
+    
+    private static class CursoExistente extends Exception {
+        
+    }
+}
